@@ -24,26 +24,28 @@ public class IncomingCallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         SipAudioCall incomingCall = null;
         try {
-
-            SipAudioCall.Listener listener = new SipAudioCall.Listener() {
+        	
+            SipAudioCall.Listener listener = new SipAudioCall.Listener() {               
                 @Override
-                public void onRinging(SipAudioCall call, SipProfile caller) {
-                    try {
-                        call.answerCall(30);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+				public void onCallEnded(SipAudioCall call) {
+                	client.fireCallback(AndroidSIPClient.ON_CALL_ENDED);
+					Log.d(AndroidSIPClient.LCAT, "Call Ended");
+				}
+                
             };
+            
             incomingCall = client.getManager().takeAudioCall(intent, listener);
             client.setCall(incomingCall);
             Log.d(AndroidSIPClient.LCAT, "Incoming Call");
             
-            
-    		KrollDict eventProperties = new KrollDict();
+            KrollDict eventProperties = new KrollDict();
     		eventProperties.put ("displayName", incomingCall.getPeerProfile().getDisplayName());
     		eventProperties.put ("uri", incomingCall.getPeerProfile().getUriString());
     		client.fireCallback (AndroidSIPClient.ON_INCOMING_CALL, new Object [] {eventProperties});
+            
+    		
+            
+            
     
         } catch (Exception e) {
             if (incomingCall != null) {

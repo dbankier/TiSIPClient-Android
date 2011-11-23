@@ -1,0 +1,71 @@
+This was the quick way of get SIP integration for Appcelerator's Titanium. From Gingerbread onwards Android comes with a SIP stack/API. So I'm just tapping into it. It is not ideal. Firstly it doesn't support a separate Authentication UserId. I think that is from about API 13 onward... Also I'm not terrible confident with what Google has provided.
+
+Here is how to  use it.
+You need to include the module in the tiapp.xml:
+            <module platform="android" version="0.1">com.yydigital.sipclient</module>
+
+You also need to add these permissions:
+            <!-- For Basic Sip -->
+            <uses-permission android:name="android.permission.USE_SIP"/>
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.VIBRATE"/>
+            <!-- For StartAudio -->
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+            <uses-permission android:name="android.permission.WAKE_LOCK"/>
+            <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+            <!-- For Speaker Mode -->
+            <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
+
+Then the code is something like this:
+
+        var sip = require("com.yydigital.sipclient");
+       
+        var sipClient = sip.createSipclient({
+            username : ...,
+            domain : ...,
+            password : ...,
+            outboundProxy:...,
+
+            autoRegistration : ...,
+            sendKeepAlive :...,
+            port : ...,
+            // Events
+            onregistering : function() {
+                //callback
+            },
+            onregisterationfailed : function() {
+                //callback
+            },
+            onregistrationdone : function() {
+                //callback
+            },
+            oncallestablished : function() {
+                //callback
+            },
+            oncallended : function() {
+                //callback
+            },
+            onincomingcall : function(e) {
+                //callback
+            },
+            onringingback : function() {
+                //callback
+            },
+            oncallbusy : function() {
+                //callback
+            },
+            onerror : function(e) {
+                //callback
+            }
+        });
+       
+The following methods are supported: register, answer, close, hangup, holdCall, initiateCall(address), sendDTMF, toggleMuted, unholdCall.
+The following  get properties are support: registered, incall, muted, onhold.
+The following  set properties are support: speakerMode.
+
+This is what you will need to do on your own:
+All audio files: ringback tones, ringtone, dtmf.
+All UIs - meaning everything.
+Make the phone wakeup, turn on and launch application on an incoming call. I needed to build another native module for that.
+

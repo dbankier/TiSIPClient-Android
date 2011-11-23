@@ -24,6 +24,9 @@ public class AndroidSIPClient {
 	public static final String ON_REGISTRATION_FAILED = "onregistrationfailed";
 	public static final String ON_CALL_ESTABLISHED = "oncallestablished";
 	public static final String ON_CALL_ENDED = "oncallended";
+	public static final String ON_CALL_BUSY = "oncallbusy";
+	public static final String ON_ERROR = "onerror";
+	public static final String ON_RINGING_BACK = "onringingback";
 	public static final String ON_INCOMING_CALL = "onincomingcall";
 
 	private KrollProxy proxy;
@@ -142,6 +145,7 @@ public class AndroidSIPClient {
 	public void hangup() throws SipException {
 		if (call != null) {
 			call.endCall();
+			fireCallback(ON_CALL_ENDED);
 			call.close();
 		}
 	}
@@ -214,16 +218,29 @@ public class AndroidSIPClient {
 					fireCallback(ON_CALL_ESTABLISHED);
 					Log.d(LCAT, "Call Established");
 				}
-
-					/*super.onCallBusy(arg0);
-					super.onCallHeld(arg0);
-					super.onCalling(arg0);
-					super.onChanged(arg0);
-					super.onError(arg0, arg1, arg2);
-					super.onReadyToCall(arg0);
-					super.onRinging(arg0, arg1);
-					super.onRingingBack(arg0);
-					*/
+				
+				@Override
+				public void onCallBusy(SipAudioCall call) {
+					fireCallback(ON_CALL_BUSY);
+					Log.d(LCAT, "Call Busy");
+				}
+				
+				
+				@Override
+				public void onError(SipAudioCall call, int errorCode, String errorMessage) {
+		            KrollDict eventProperties = new KrollDict();
+		    		eventProperties.put ("errorCode", errorCode);
+		    		eventProperties.put ("errorMessage", errorMessage);
+		    		fireCallback (ON_CALL_BUSY, new Object [] {eventProperties});
+					Log.d(LCAT, "Call Error: " + errorMessage);
+				}
+				
+				@Override
+				public void onRingingBack(SipAudioCall call) {
+					fireCallback(ON_RINGING_BACK);
+					Log.d(LCAT, "Call Ringing Back Received");
+				}
+				
 
 				@Override
 				public void onCallEnded(SipAudioCall call) {
