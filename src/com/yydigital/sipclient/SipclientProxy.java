@@ -13,8 +13,6 @@ import java.text.ParseException;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import org.appcelerator.titanium.TiContext;
-
 import android.net.sip.SipException;
 
 // This proxy can be created by calling Sipclient.createSipclient({message: "hello world"})
@@ -26,8 +24,8 @@ public class SipclientProxy extends KrollProxy
 	//private static final boolean DBG = TiConfig.LOGD;
 	private AndroidSIPClient client;
 	// Constructor
-	public SipclientProxy(TiContext tiContext) {
-		super(tiContext);
+	public SipclientProxy() {
+		super();
 		this.client = new AndroidSIPClient(this);
 	}
 	

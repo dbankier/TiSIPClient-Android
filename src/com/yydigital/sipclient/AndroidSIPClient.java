@@ -3,9 +3,10 @@ package com.yydigital.sipclient;
 import java.text.ParseException;
 
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
-import org.appcelerator.titanium.kroll.KrollCallback;
-import org.appcelerator.titanium.util.Log;
+import org.appcelerator.kroll.common.Log;
+import org.appcelerator.titanium.TiApplication;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -37,13 +38,12 @@ public class AndroidSIPClient {
 	public AndroidSIPClient(KrollProxy proxy) {
 		this.proxy = proxy;
 		if (mSipManager == null) {
-			mSipManager = SipManager.newInstance(proxy.getTiContext()
-					.getAndroidContext());
+			mSipManager = SipManager.newInstance(TiApplication.getInstance());
 		}
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("com.yydigital.sipclient.INCOMING_CALL");
 		IncomingCallReceiver callReceiver = new IncomingCallReceiver(this);
-		proxy.getTiContext().getActivity()
+		proxy.getActivity()
 				.registerReceiver(callReceiver, filter);
 	}
 
@@ -64,10 +64,11 @@ public class AndroidSIPClient {
 		if (getProperty("outboundProxy") != null) {
 			builder.setOutboundProxy(getProperty("outboundProxy"));
 		}
-		/*
-		 * if (getProperty("authUserName") != null) {
-		 * builder.setAuthUserName(getProperty("authUserName")); }
-		 */
+		 
+		if (getProperty("authUserName") != null) {
+			builder.setAuthUserName(getProperty("authUserName")); 
+		}
+		
 		if (proxy.getProperty("port") != null) {
 			builder.setPort(((Double) proxy.getProperty("port")).intValue());
 		}
@@ -86,8 +87,7 @@ public class AndroidSIPClient {
 		Log.d(LCAT, "Setting Incoming Call Broadcaster");
 		Intent intent = new Intent();
 		intent.setAction("com.yydigital.sipclient.INCOMING_CALL");
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(proxy
-				.getTiContext().getAndroidContext(), 0, intent,
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(TiApplication.getInstance(), 0, intent,
 				Intent.FILL_IN_DATA);
 
 		Log.d(LCAT, "Opening");
@@ -269,10 +269,10 @@ public class AndroidSIPClient {
 		}
 	}
 
-	public KrollCallback getCallback(String name) {
+	public KrollFunction getCallback(String name) {
 		Object value = proxy.getProperty(name);
-		if (value != null && value instanceof KrollCallback) {
-			return (KrollCallback) value;
+		if (value != null && value instanceof KrollFunction) {
+			return (KrollFunction) value;
 		}
 		return null;
 	}
@@ -285,10 +285,9 @@ public class AndroidSIPClient {
 	}
 
 	public void fireCallback(String name, Object[] args) {
-		KrollCallback cb = getCallback(name);
+		KrollFunction cb = getCallback(name);
 		if (cb != null) {
-			cb.setThisProxy(proxy);
-			cb.callAsync(args);
+			cb.callAsync(proxy.getKrollObject(), args);
 		}
 	}
 

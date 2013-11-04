@@ -11,43 +11,12 @@ package com.yydigital.sipclient;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import org.appcelerator.titanium.TiContext;
-import org.appcelerator.titanium.util.Log;
-import org.appcelerator.titanium.util.TiConfig;
 
 @Kroll.module(name="Sipclient", id="com.yydigital.sipclient")
 public class SipclientModule extends KrollModule
 {
-
-	// Standard Debugging variables
-	//private static final String LCAT = "SipclientModule";
-	//private static final boolean DBG = TiConfig.LOGD;
-
-	// You can define constants with @Kroll.constant, for example:
-	// @Kroll.constant public static final String EXTERNAL_NAME = value;
-	
-	public SipclientModule(TiContext tiContext) {
-		super(tiContext);
-	}
-
-	/*// Methods
-	@Kroll.method
-	public String example() {
-		Log.d(LCAT, "example called");
-		return "hello world";
+	public SipclientModule() {
+		super();
 	}
 	
-	// Properties
-	@Kroll.getProperty
-	public String getExampleProp() {
-		Log.d(LCAT, "get example property");
-		return "hello world";
-	}
-	
-	
-	@Kroll.setProperty
-	public void setExampleProp(String value) {
-		Log.d(LCAT, "set example property: " + value);
-	}*/
-
 }
