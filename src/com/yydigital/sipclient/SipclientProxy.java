@@ -41,7 +41,7 @@ public class SipclientProxy extends KrollProxy
 	
 	// Methods
 	@Kroll.method
-	public void register() throws ParseException, SipException {
+	public void SIPregister() throws ParseException, SipException {
 		client.register();
 	}
 	@Kroll.method

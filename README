@@ -60,7 +60,7 @@ Then the code is something like this:
             }
         });
        
-The following methods are supported: register, answer, close, hangup, holdCall, initiateCall(address), sendDTMF, toggleMuted, unholdCall.
+The following methods are supported: SIPregister, answer, close, hangup, holdCall, initiateCall(address), sendDTMF, toggleMuted, unholdCall.
 The following  get properties are support: registered, incall, muted, onhold.
 The following  set properties are support: speakerMode.
 
